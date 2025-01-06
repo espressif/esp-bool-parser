@@ -76,7 +76,6 @@ class ChipAttr(Stmt):
         if self.attr == 'CONFIG_NAME':
             return config_name
 
-        # for non-keyword cap words, check if it is defined in the environment variables
         if self.attr in os.environ:
             return os.environ[self.attr]
 
