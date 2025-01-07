@@ -3,7 +3,9 @@
 
 import pytest
 
+import esp_bool_parser.constants
 from esp_bool_parser.bool_parser import parse_bool_expr, register_addition_attribute
+from esp_bool_parser.utils import to_version
 
 
 @pytest.mark.parametrize(
@@ -87,3 +89,15 @@ def test_chain_rule(s, res):
     stmt = parse_bool_expr(s)
     result = stmt.get_value('', '')
     assert result == res
+
+
+def test_idf_version(monkeypatch):
+    monkeypatch.setattr(esp_bool_parser.constants, 'IDF_VERSION', to_version('5.9.0'))
+    statement = 'IDF_VERSION > "5.10.0"'
+    assert parse_bool_expr(statement).get_value('esp32', 'foo') is False
+
+    statement = 'IDF_VERSION < "5.10.0"'
+    assert parse_bool_expr(statement).get_value('esp32', 'foo') is True
+
+    statement = 'IDF_VERSION in  ["5.9.0"]'
+    assert parse_bool_expr(statement).get_value('esp32', 'foo') is True
