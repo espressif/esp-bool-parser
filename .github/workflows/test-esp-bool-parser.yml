@@ -2,8 +2,6 @@ name: Test ESP bool parser
 
 on:
   pull_request:
-    paths:
-      - 'esp_bool_parser/**'
   push:
     branches:
       - main
@@ -17,7 +15,7 @@ defaults:
 
 jobs:
   build-python-packages:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,14 +31,17 @@ jobs:
           name: wheel
           path: dist/esp_bool_parser-*.whl
 
-
-  basic-testest:
-    runs-on: ubuntu-latest
+  basic-test:
+    needs: build-python-packages
+    runs-on: ubuntu-22.04
     env:
       FLIT_ROOT_INSTALL: 1
     steps:
       - uses: actions/checkout@v4
-      - name: Build the Apps
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.7'
+      - name: Run tests
         run: |
           pip install flit
           flit install -s
