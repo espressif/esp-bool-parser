@@ -61,7 +61,7 @@ class ChipAttr(Stmt):
     - CONFIG_NAME: config name defined in the config rules
     """
 
-    addition_attr: t.Dict[str, t.Callable] = {}
+    addition_attr: t.ClassVar[t.Dict[str, t.Callable]] = {}
 
     def __init__(self, t: ParseResults):
         self.attr: str = t[0]
@@ -131,7 +131,7 @@ class List_(Stmt):
 
 
 class BoolStmt(Stmt):
-    _OP_DICT = {
+    _OP_DICT: t.ClassVar[t.Dict[str, t.Callable[..., bool]]] = {
         '==': operator.eq,
         '!=': operator.ne,
         '>': operator.gt,

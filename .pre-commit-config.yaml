@@ -28,15 +28,8 @@ repos:
       - id: mypy
         args: ['--warn-unused-ignores']
         additional_dependencies:
-          - pydantic<2.6
-          - pydantic-settings
-          - packaging
-          - toml
           - pyparsing
-          - types-PyYAML
-          - types-toml
           - pytest
-          - argcomplete>=3
   - repo: https://github.com/hfudev/rstfmt
     rev: v0.1.4
     hooks:
