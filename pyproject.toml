@@ -134,8 +134,6 @@ select = [
     'RUF',  # Ruff-specific rules
 ]
 ignore = [
-    # Mutable class attributes should be annotated with `typing.ClassVar`, pydantic model is an exception
-    'RUF012',
     # `open` and `read` should be replaced by `Path(f).read_text()`
     'FURB101',
 ]
@@ -146,3 +144,4 @@ docstring-code-format = true
 
 [tool.mypy]
 python_version = "3.8"
+follow_untyped_imports = true
