@@ -52,7 +52,7 @@ changelog = "https://github.com/espressif/esp-bool-parsers/blob/main/CHANGELOG.m
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.1.2"
+version = "0.1.3"
 tag_format = "v$version"
 version_files = [
     "esp_bool_parser/__init__.py",

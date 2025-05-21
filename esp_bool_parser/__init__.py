@@ -7,7 +7,7 @@ Tools for building ESP-IDF related apps.
 
 # ruff: noqa: E402
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 import importlib
 
