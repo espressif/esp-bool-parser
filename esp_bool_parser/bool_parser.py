@@ -6,6 +6,7 @@ import typing as t
 from ast import (
     literal_eval,
 )
+from functools import lru_cache
 
 from packaging.version import (
     Version,
@@ -66,6 +67,7 @@ class ChipAttr(Stmt):
     def __init__(self, t: ParseResults):
         self.attr: str = t[0]
 
+    @lru_cache(None)
     def get_value(self, target: str, config_name: str) -> t.Any:
         if self.attr in self.addition_attr:
             return self.addition_attr[self.attr](target=target, config_name=config_name)
@@ -110,6 +112,7 @@ class Integer(Stmt):
     def __init__(self, t: ParseResults):
         self.expr: str = t[0]
 
+    @lru_cache(None)
     def get_value(self, target: str, config_name: str) -> t.Any:  # noqa: ARG002
         return literal_eval(self.expr)
 
@@ -118,6 +121,7 @@ class String(Stmt):
     def __init__(self, t: ParseResults):
         self.expr: str = t[0]
 
+    @lru_cache(None)
     def get_value(self, target: str, config_name: str) -> t.Any:  # noqa: ARG002
         return literal_eval(f'"{self.expr}"')  # double quotes is swallowed by QuotedString
 
@@ -126,6 +130,7 @@ class List_(Stmt):
     def __init__(self, t: ParseResults):
         self.expr = t
 
+    @lru_cache(None)
     def get_value(self, target: str, config_name: str) -> t.Any:
         return [item.get_value(target, config_name) for item in self.expr]
 
@@ -147,6 +152,7 @@ class BoolStmt(Stmt):
         self.comparison: str = t[1]
         self.right: Stmt = t[2]
 
+    @lru_cache(None)
     def get_value(self, target: str, config_name: str) -> t.Any:
         _l = self.left.get_value(target, config_name)
         _r = self.right.get_value(target, config_name)
@@ -183,30 +189,20 @@ def _or(_l, _r):
 
 class BoolOr(BoolExpr):
     def __init__(self, res: ParseResults):
-        self.bool_stmts: t.List[BoolStmt] = []
-        for stmt in res[0]:
-            if stmt != 'or':
-                self.bool_stmts.append(stmt)
+        self.bool_stmts: t.List[BoolStmt] = [stmt for stmt in res[0] if stmt != 'or']
 
+    @lru_cache(None)
     def get_value(self, target: str, config_name: str) -> t.Any:
-        for stmt in self.bool_stmts:
-            if stmt.get_value(target, config_name):
-                return True
-        return False
+        return any(stmt.get_value(target, config_name) for stmt in self.bool_stmts)
 
 
 class BoolAnd(BoolExpr):
     def __init__(self, res: ParseResults):
-        self.bool_stmts: t.List[BoolStmt] = []
-        for stmt in res[0]:
-            if stmt != 'and':
-                self.bool_stmts.append(stmt)
+        self.bool_stmts: t.List[BoolStmt] = [stmt for stmt in res[0] if stmt != 'and']
 
+    @lru_cache(None)
     def get_value(self, target: str, config_name: str) -> t.Any:
-        for stmt in self.bool_stmts:
-            if not stmt.get_value(target, config_name):
-                return False
-        return True
+        return all(stmt.get_value(target, config_name) for stmt in self.bool_stmts)
 
 
 CAP_WORD = Word(alphas.upper(), nums + alphas.upper() + '_').setParseAction(ChipAttr)
