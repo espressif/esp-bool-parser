@@ -183,30 +183,18 @@ def _or(_l, _r):
 
 class BoolOr(BoolExpr):
     def __init__(self, res: ParseResults):
-        self.bool_stmts: t.List[BoolStmt] = []
-        for stmt in res[0]:
-            if stmt != 'or':
-                self.bool_stmts.append(stmt)
+        self.bool_stmts: t.List[BoolStmt] = [stmt for stmt in res[0] if stmt != 'or']
 
     def get_value(self, target: str, config_name: str) -> t.Any:
-        for stmt in self.bool_stmts:
-            if stmt.get_value(target, config_name):
-                return True
-        return False
+        return any(stmt.get_value(target, config_name) for stmt in self.bool_stmts)
 
 
 class BoolAnd(BoolExpr):
     def __init__(self, res: ParseResults):
-        self.bool_stmts: t.List[BoolStmt] = []
-        for stmt in res[0]:
-            if stmt != 'and':
-                self.bool_stmts.append(stmt)
+        self.bool_stmts: t.List[BoolStmt] = [stmt for stmt in res[0] if stmt != 'and']
 
     def get_value(self, target: str, config_name: str) -> t.Any:
-        for stmt in self.bool_stmts:
-            if not stmt.get_value(target, config_name):
-                return False
-        return True
+        return all(stmt.get_value(target, config_name) for stmt in self.bool_stmts)
 
 
 CAP_WORD = Word(alphas.upper(), nums + alphas.upper() + '_').setParseAction(ChipAttr)
