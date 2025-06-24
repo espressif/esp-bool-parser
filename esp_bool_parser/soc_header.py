@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2022-2025 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
+import glob
 import logging
 import os.path
+import re
 import typing as t
 from pathlib import (
     Path,
@@ -94,16 +96,31 @@ class SocHeader(dict):
 
     @classmethod
     def _parse_soc_header(cls, target: str) -> t.Dict[str, t.Any]:
-        soc_headers_dirs = cls._get_dirs_from_candidates(
-            [
-                # master c5 mp
-                os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', target, 'mp', 'include', 'soc')),
-                # other branches
-                os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', target, 'include', 'soc')),
-                # release/v4.2
-                os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', 'soc', target, 'include', 'soc')),
-            ]
-        )
+        hw_ver_dirs = glob.glob(os.path.join(IDF_PATH, 'components', 'soc', target, 'include', 'hw_ver*', 'soc'))
+        latest_hw_ver_dir = None
+        if hw_ver_dirs:
+
+            def extract_version(path):
+                match = re.search(r'hw_ver(\d+)', path)
+                return int(match.group(1)) if match else -1
+
+            hw_ver_dirs = [os.path.abspath(p) for p in hw_ver_dirs]
+            latest_hw_ver_dir = max(hw_ver_dirs, key=extract_version)
+
+        candidates = [
+            # master c5 mp
+            os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', target, 'mp', 'include', 'soc')),
+            # other branches
+            os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', target, 'include', 'soc')),
+            # release/v4.2
+            os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', 'soc', target, 'include', 'soc')),
+        ]
+
+        if latest_hw_ver_dir:
+            # eco hw latest version
+            candidates.append(latest_hw_ver_dir)
+
+        soc_headers_dirs = cls._get_dirs_from_candidates(candidates)
         esp_rom_headers_dirs = cls._get_dirs_from_candidates(
             [
                 # master c5 mp
