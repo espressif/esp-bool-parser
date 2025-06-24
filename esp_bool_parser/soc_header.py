@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2022-2025 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
+import glob
 import logging
 import os.path
+import re
 import typing as t
 from pathlib import (
     Path,
@@ -94,6 +96,17 @@ class SocHeader(dict):
 
     @classmethod
     def _parse_soc_header(cls, target: str) -> t.Dict[str, t.Any]:
+        hw_ver_dirs = glob.glob(os.path.join(IDF_PATH, 'components', 'soc', target, 'include', 'hw_ver*', 'soc'))
+        hw_ver_latest_dir = []
+        if hw_ver_dirs:
+
+            def extract_version(path):
+                match = re.search(r'hw_ver(\d+)', path)
+                return int(match.group(1)) if match else -1
+
+            hw_ver_dirs = [os.path.abspath(p) for p in hw_ver_dirs]
+            hw_ver_latest_dir.append(max(hw_ver_dirs, key=extract_version))
+
         soc_headers_dirs = cls._get_dirs_from_candidates(
             [
                 # master c5 mp
@@ -102,6 +115,8 @@ class SocHeader(dict):
                 os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', target, 'include', 'soc')),
                 # release/v4.2
                 os.path.abspath(os.path.join(IDF_PATH, 'components', 'soc', 'soc', target, 'include', 'soc')),
+                # eco hw latest version
+                *hw_ver_latest_dir,
             ]
         )
         esp_rom_headers_dirs = cls._get_dirs_from_candidates(
