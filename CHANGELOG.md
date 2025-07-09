@@ -20,6 +20,19 @@
 </div>
 <hr>
 
+## v0.1.4 (2025-07-09)
+
+### 📖 Documentation
+
+- improve english writing (LLM) *(Fu Hanxi - d7cc28e)*
+- introduce api reference and small fixes about single backtick *(Fu Hanxi - e1bb403)*
+
+### 🏗️ Changes
+
+- set log level to DEBUG when IDF_PATH is not set *(Fu Hanxi - 137fd51)*
+
+---
+
 ## v0.1.3 (2025-05-21)
 
 ### ⚡ Performance Improvements
