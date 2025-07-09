@@ -1,7 +1,7 @@
 esp-bool-parser Package
 =======================
 
-This package provides tools for processing boolean statements based on ESP-IDF SOC capabilities and configurations.
+Tools for processing boolean statements based on ESP-IDF SOC capabilities and configurations.
 
 Main Package Module
 -------------------

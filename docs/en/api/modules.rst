@@ -1,26 +1,34 @@
 API Reference
 =============
 
-This section provides detailed API reference documentation for the ``esp-bool-parser`` package.
+Complete API documentation for the ``esp-bool-parser`` package.
 
-Overview
---------
+Components
+----------
 
-The ``esp-bool-parser`` package provides the following main components:
+**Boolean Expression Parser**
+    Parse and evaluate boolean expressions for ESP-IDF targets and configurations
 
-- **Boolean Expression Parser**: Parse and evaluate boolean expressions with support for ESP-IDF targets and configurations
-- **SOC Header Parser**: Parse ESP-IDF SOC header files to extract chip capabilities
-- **Extensible Attributes**: Add custom attributes and handlers for specialized use cases
-- **Constants and Utilities**: Access ESP-IDF constants and utility functions
+**SOC Header Parser**
+    Extract chip capabilities from ESP-IDF SOC header files
 
-Main Entry Points
------------------
+**Extensible Attributes**
+    Register custom attributes and handlers for specialized use cases
 
-The primary functions you'll use are:
+**Constants and Utilities**
+    ESP-IDF constants and utility functions
 
-- ``parse_bool_expr()``: Parse boolean expressions and create BoolStmt objects
-- ``register_addition_attribute()``: Register custom attributes for ChipAttr
-- ``BoolStmt.get_value()``: Evaluate boolean expressions for specific targets
+Core Functions
+--------------
+
+``parse_bool_expr()``
+    Parse boolean expressions and return BoolStmt objects
+
+``register_addition_attribute()``
+    Register custom attributes for ChipAttr
+
+``BoolStmt.get_value()``
+    Evaluate boolean expressions for specific targets
 
 Package Documentation
 ---------------------
