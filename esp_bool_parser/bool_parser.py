@@ -33,26 +33,21 @@ from .utils import (
 
 
 class Stmt:
-    """
-    Statement
-    """
+    """Statement"""
 
     def get_value(self, target: str, config_name: str) -> t.Any:
-        """
-        Lazy calculated. All subclasses of `Stmt` should implement this function.
+        """Lazy calculated. All subclasses of `Stmt` should implement this function.
 
         :param target: ESP-IDF target
-        :type target: str
         :param config_name: config name
-        :type target: str
-        :return: the value of the statement
+
+        :returns: the value of the statement
         """
         raise NotImplementedError('Please implement this function in sub classes')
 
 
 class ChipAttr(Stmt):
-    """
-    Attributes defined in SOC Header Files and other keywords as followed:
+    """Attributes defined in SOC Header Files and other keywords as followed:
 
     - IDF_TARGET: target
     - INCLUDE_DEFAULT: take the default build targets into account or not
@@ -242,34 +237,34 @@ BOOL_EXPR = infixNotation(
 
 
 def register_addition_attribute(attr: str, action: t.Callable[..., t.Any]) -> None:
-    """
-    Register an additional attribute for ChipAttr.
+    """Register an additional attribute for ChipAttr.
 
     :param attr: The name of the additional attribute (string).
-    :param action: A callable that processes **kwargs. The `target` and `config_name`
-                   parameters will be passed as kwargs when the attribute is detected.
+    :param action: A callable that processes ``**kwargs``. The ``target`` and
+        ``config_name`` parameters will be passed as kwargs when the attribute is
+        detected.
     """
     ChipAttr.addition_attr[attr] = action
 
 
 def parse_bool_expr(stmt: str) -> BoolStmt:
-    """
-    Parse a boolean expression.
+    """Parse a boolean expression.
 
     :param stmt: A string containing the boolean expression.
-    :return: A `BoolStmt` object representing the parsed expression.
+
+    :returns: A ``BoolStmt`` object representing the parsed expression.
 
     .. note::
 
-        You can use this function to parse a boolean expression and evaluate its value based on the given context.
-        For example:
+        You can use this function to parse a boolean expression and evaluate its value
+        based on the given context. For example:
 
-        .. code:: python
+        .. code-block:: python
 
-           stmt_string = 'IDF_TARGET == "esp32"'
-           stmt: BoolStmt = parse_bool_expr(stmt_string)
-           value = stmt.get_value("esp32", "config_name")
-           print(value)
-           # Output: True
+            stmt_string = 'IDF_TARGET == "esp32"'
+            stmt: BoolStmt = parse_bool_expr(stmt_string)
+            value = stmt.get_value("esp32", "config_name")
+            print(value)
+            # Output: True
     """
     return BOOL_EXPR.parseString(stmt)[0]

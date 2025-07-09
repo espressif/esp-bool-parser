@@ -14,33 +14,32 @@ _ModuleType: t.Any = type(importlib)
 def lazy_load(
     base_module: _ModuleType, name_obj_dict: t.Dict[str, t.Any], obj_module_dict: t.Dict[str, str]
 ) -> t.Callable[[str], t.Any]:
-    """
-    use __getattr__ in the __init__.py file to lazy load some objects
+    """Use ``__getattr__`` in the ``__init__.py`` file to lazy load some objects.
 
-    Args:
-        base_module (ModuleType): base package module
-        name_obj_dict (dict[str, any]): name, real object dict, used to store real objects,
-            no need to add lazy-load objects
-        obj_module_dict (dict[str, str]): dict of object name and module name
+    :param base_module: Base package module.
+    :param name_obj_dict: Dictionary mapping object names to real objects. Used to store
+        real objects; no need to add lazy-load objects.
+    :param obj_module_dict: Dictionary mapping object names to module names.
 
-    Returns:
-        __getattr__ function
+    :returns: The ``__getattr__`` function.
 
-    Example:
+    .. note::
 
-        ::
+        Example usage in ``__init__.py``:
+
+        .. code-block:: python
 
             __getattr__ = lazy_load(
                 importlib.import_module(__name__),
                 {
-                    'IdfApp': IdfApp,
-                    'LinuxDut': LinuxDut,
-                    'LinuxSerial': LinuxSerial,
-                    'CaseTester': CaseTester,
+                    "IdfApp": IdfApp,
+                    "LinuxDut": LinuxDut,
+                    "LinuxSerial": LinuxSerial,
+                    "CaseTester": CaseTester,
                 },
                 {
-                    'IdfSerial': '.serial',
-                    'IdfDut': '.dut',
+                    "IdfSerial": ".serial",
+                    "IdfDut": ".dut",
                 },
             )
     """

@@ -17,9 +17,9 @@ repos:
           - --use-current-year
         exclude: 'idf_build_apps/vendors/'
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 'v0.12.0'
+    rev: 'v0.12.2'
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: ['--fix']
       - id: ruff-format
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -30,13 +30,15 @@ repos:
         additional_dependencies:
           - pyparsing
           - pytest
-  - repo: https://github.com/hfudev/rstfmt
-    rev: v0.1.4
+  - repo: https://github.com/LilSpazJoekp/docstrfmt
+    rev: v1.10.0
     hooks:
-      - id: rstfmt
-        args: ['-w', '-1']
-        files: "docs\/.+rst$"
-        additional_dependencies:
-          - sphinx-argparse
-          - sphinx-tabs
-          - sphinxcontrib-mermaid
+      - id: docstrfmt
+        types: [rst]
+        args: ['-l', '99999999999999999999999']
+  - repo: https://github.com/LilSpazJoekp/docstrfmt
+    rev: v1.10.0
+    hooks:
+      - id: docstrfmt
+        types: [python]
+        args: ['--no-docstring-trailing-line']

@@ -41,12 +41,10 @@ html_logo = '../_static/espressif-logo.svg'
 html_static_path = ['../_static']
 html_theme = 'sphinx_rtd_theme'
 
-# mermaid 10.2.0 will show syntax error
-# use fixed version instead
-mermaid_version = '10.6.1'
 
 autodoc_default_options = {
     'members': True,
+    'undoc-members': True,
     'member-order': 'bysource',
     'show-inheritance': True,
     'exclude-members': 'model_computed_fields,model_config,model_fields,model_post_init',
