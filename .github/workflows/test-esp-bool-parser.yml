@@ -26,7 +26,7 @@ jobs:
           pip install flit
           flit build
       - name: Upload built python packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: wheel
           path: dist/esp_bool_parser-*.whl
