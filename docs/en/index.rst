@@ -1,17 +1,20 @@
-esp-bool-parser |version| Documentation
-=======================================
+#########################################
+ esp-bool-parser |version| Documentation
+#########################################
 
 esp-bool-parser processes boolean expressions based on ESP-IDF ``soc_caps`` files.
 
-Overview
---------
+**********
+ Overview
+**********
 
 This package parses boolean statements from ESP-IDF configurations and evaluates them against target-specific capabilities. It locates SOC header files, extracts chip capabilities, and stores them as constants for use in ``ChipAttr``.
 
 The main entry point is ``parse_bool_expr``, which returns a ``BoolStmt`` object for evaluation.
 
-Usage
------
+*******
+ Usage
+*******
 
 .. code-block:: python
 
@@ -20,8 +23,9 @@ Usage
     stmt = parse_bool_expr('IDF_TARGET == "esp32"')
     result = stmt.get_value("esp32", "config_name")
 
-Extending ChipAttr
-------------------
+********************
+ Extending ChipAttr
+********************
 
 Register custom attributes using ``register_addition_attribute``. Custom handlers take priority over built-in attributes.
 
