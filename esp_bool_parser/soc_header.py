@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022-2025 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2022-2026 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
 import logging
 import os.path
@@ -65,7 +65,7 @@ def get_defines(header_path: str) -> t.List[str]:
 
 
 def parse_define(define_line: str) -> ParseResults:
-    res = _define_expr.parseString(define_line)
+    res = _define_expr.parse_string(define_line)
 
     return res
 
