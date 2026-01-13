@@ -1,10 +1,12 @@
-API Reference
-=============
+###############
+ API Reference
+###############
 
 Complete API documentation for the ``esp-bool-parser`` package.
 
-Components
-----------
+************
+ Components
+************
 
 **Boolean Expression Parser**
     Parse and evaluate boolean expressions for ESP-IDF targets and configurations
@@ -18,8 +20,9 @@ Components
 **Constants and Utilities**
     ESP-IDF constants and utility functions
 
-Core Functions
---------------
+****************
+ Core Functions
+****************
 
 ``parse_bool_expr()``
     Parse boolean expressions and return BoolStmt objects
@@ -30,8 +33,9 @@ Core Functions
 ``BoolStmt.get_value()``
     Evaluate boolean expressions for specific targets
 
-Package Documentation
----------------------
+***********************
+ Package Documentation
+***********************
 
 .. toctree::
     :maxdepth: 2
