@@ -20,6 +20,12 @@
 </div>
 <hr>
 
+## v0.2.0 (2026-01-13)
+
+### 🔧 Code Refactoring
+
+- update deprecated pyparsing functions to snake_case *(Igor Udot - 043674c)*
+
 ## v0.1.4 (2025-07-09)
 
 ### 📖 Documentation
