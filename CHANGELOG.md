@@ -26,6 +26,8 @@
 
 - update deprecated pyparsing functions to snake_case *(Igor Udot - 043674c)*
 
+---
+
 ## v0.1.4 (2025-07-09)
 
 ### 📖 Documentation
@@ -91,6 +93,6 @@
             <a href="https://www.github.com/espressif/cz-plugin-espressif">Commitizen Espressif plugin</a>
         </b>
     <br>
-        <sup><a href="https://www.espressif.com">Espressif Systems CO LTD. (2025)</a><sup>
+        <sup><a href="https://www.espressif.com">Espressif Systems CO LTD. (2026)</a><sup>
     </small>
 </div>
