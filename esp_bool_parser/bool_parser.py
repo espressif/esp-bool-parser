@@ -12,7 +12,6 @@ from packaging.version import (
     Version,
 )
 from pyparsing import (
-    DelimitedList,
     Keyword,
     Literal,
     ParseResults,
@@ -21,15 +20,23 @@ from pyparsing import (
     Word,
     alphas,
     hexnums,
-    infix_notation,
     nums,
     opAssoc,
 )
 
 from .utils import (
+    _IS_OLD_PYPARSING,
     InvalidInput,
+    pp_parse_string,
+    pp_set_parse_action,
     to_version,
 )
+
+if _IS_OLD_PYPARSING:
+    from pyparsing import delimitedList as DelimitedList
+    from pyparsing import infixNotation as infix_notation
+else:
+    from pyparsing import DelimitedList, infix_notation
 
 
 class Stmt:
@@ -200,29 +207,28 @@ class BoolAnd(BoolExpr):
         return all(stmt.get_value(target, config_name) for stmt in self.bool_stmts)
 
 
-CAP_WORD = Word(alphas.upper(), nums + alphas.upper() + '_').set_parse_action(ChipAttr)
+CAP_WORD = pp_set_parse_action(Word(alphas.upper(), nums + alphas.upper() + '_'))(ChipAttr)
 
 DECIMAL_NUMBER = Word(nums)
 HEX_NUMBER = Literal('0x') + Word(hexnums)
-INTEGER = (HEX_NUMBER | DECIMAL_NUMBER).set_parse_action(Integer)
+INTEGER = pp_set_parse_action(HEX_NUMBER | DECIMAL_NUMBER)(Integer)
 
-STRING = QuotedString('"').set_parse_action(String)
+STRING = pp_set_parse_action(QuotedString('"'))(String)
 
-LIST = Suppress('[') + DelimitedList(INTEGER | STRING).set_parse_action(List_) + Suppress(']')
+LIST = Suppress('[') + pp_set_parse_action(DelimitedList(INTEGER | STRING))(List_) + Suppress(']')
 
 BOOL_OPERAND = CAP_WORD | INTEGER | STRING | LIST
 
-EQ = Keyword('==').set_parse_action(lambda t: t[0])
-NE = Keyword('!=').set_parse_action(lambda t: t[0])
-LE = Keyword('<=').set_parse_action(lambda t: t[0])
-LT = Keyword('<').set_parse_action(lambda t: t[0])
-GE = Keyword('>=').set_parse_action(lambda t: t[0])
-GT = Keyword('>').set_parse_action(lambda t: t[0])
-NOT_IN = Keyword('not in').set_parse_action(lambda t: t[0])
-IN = Keyword('in').set_parse_action(lambda t: t[0])
+EQ = pp_set_parse_action(Keyword('=='))(lambda t: t[0])
+NE = pp_set_parse_action(Keyword('!='))(lambda t: t[0])
+LE = pp_set_parse_action(Keyword('<='))(lambda t: t[0])
+LT = pp_set_parse_action(Keyword('<'))(lambda t: t[0])
+GE = pp_set_parse_action(Keyword('>='))(lambda t: t[0])
+GT = pp_set_parse_action(Keyword('>'))(lambda t: t[0])
+NOT_IN = pp_set_parse_action(Keyword('not in'))(lambda t: t[0])
+IN = pp_set_parse_action(Keyword('in'))(lambda t: t[0])
 
-BOOL_STMT = BOOL_OPERAND + (EQ | NE | LE | LT | GE | GT | NOT_IN | IN) + BOOL_OPERAND
-BOOL_STMT.set_parse_action(BoolStmt)
+BOOL_STMT = pp_set_parse_action(BOOL_OPERAND + (EQ | NE | LE | LT | GE | GT | NOT_IN | IN) + BOOL_OPERAND)(BoolStmt)
 
 AND = Keyword('and')
 OR = Keyword('or')
@@ -267,4 +273,4 @@ def parse_bool_expr(stmt: str) -> BoolStmt:
             print(value)
             # Output: True
     """
-    return BOOL_EXPR.parse_string(stmt)[0]
+    return pp_parse_string(BOOL_EXPR)(stmt)[0]

@@ -36,16 +36,43 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       FLIT_ROOT_INSTALL: 1
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.7'
+            pyparsing: '==2.4'
+          - python-version: '3.14'
+            pyparsing: '>=3'
+
+    name: Test (Python ${{ matrix.python-version }}, pyparsing ${{ matrix.pyparsing }})
+
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.7'
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+
+      - name: Install dependencies
+        run: |
+          pip install flit pyparsing${{ matrix.pyparsing }}
+
+      - name: Install package
+        run: flit install -s
+
       - name: Run tests
         run: |
-          pip install flit
-          flit install -s
-          pytest --cov esp_bool_parser --cov-report term-missing:skip-covered --junit-xml pytest.xml | tee pytest-coverage.txt
+          pip show pyparsing
+          python --version
+
+          pytest \
+            --cov esp_bool_parser \
+            --cov-report term-missing:skip-covered \
+            --junit-xml pytest.xml \
+            | tee pytest-coverage.txt
+
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@main
         with:
