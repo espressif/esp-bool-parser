@@ -20,6 +20,14 @@
 </div>
 <hr>
 
+## v0.2.1 (2026-01-15)
+
+### 🔧 Code Refactoring
+
+- Add support for pyparsing 2.x and 3.x *(Igor Udot – 0da115a)*
+
+---
+
 ## v0.2.0 (2026-01-13)
 
 ### 🔧 Code Refactoring

@@ -59,7 +59,7 @@ annotated_tag = true
 changelog_merge_prerelease = true
 tag_format = "v$version"
 update_changelog_on_bump = true
-version = "0.2.0"
+version = "0.2.1"
 version_files = [
     "esp_bool_parser/__init__.py",
 ]

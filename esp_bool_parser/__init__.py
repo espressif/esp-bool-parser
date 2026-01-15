@@ -3,7 +3,7 @@
 
 """Tools for building ESP-IDF related apps."""
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 import importlib
 
