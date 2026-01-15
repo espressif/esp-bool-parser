@@ -4,6 +4,7 @@
 import importlib
 import typing as t
 
+import pyparsing
 from packaging.version import (
     Version,
 )
@@ -74,3 +75,20 @@ def to_version(s: t.Any) -> Version:
         return Version(str(s))
     except ValueError:
         raise InvalidInput(f'Invalid version: {s}')
+
+
+_IS_OLD_PYPARSING = Version(pyparsing.__version__) < Version('3.0')
+
+
+def pp_set_parse_action(o):
+    if _IS_OLD_PYPARSING:
+        return o.setParseAction
+    else:
+        return o.set_parse_action
+
+
+def pp_parse_string(o):
+    if _IS_OLD_PYPARSING:
+        return o.parseString
+    else:
+        return o.parse_string

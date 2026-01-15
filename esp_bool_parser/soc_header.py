@@ -29,6 +29,7 @@ from .constants import (
     ALL_TARGETS,
     IDF_PATH,
 )
+from .utils import pp_parse_string
 
 LOGGER = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ def get_defines(header_path: str) -> t.List[str]:
 
 
 def parse_define(define_line: str) -> ParseResults:
-    res = _define_expr.parse_string(define_line)
+    res = pp_parse_string(_define_expr)(define_line)
 
     return res
 
