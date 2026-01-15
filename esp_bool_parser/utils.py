@@ -77,7 +77,7 @@ def to_version(s: t.Any) -> Version:
         raise InvalidInput(f'Invalid version: {s}')
 
 
-_IS_OLD_PYPARSING = Version(pyparsing.__version__) < Version('3.0')
+_IS_OLD_PYPARSING = Version(pyparsing.__version__) < Version('3.1')
 
 
 def pp_set_parse_action(o):

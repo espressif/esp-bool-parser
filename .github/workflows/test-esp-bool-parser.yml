@@ -45,6 +45,8 @@ jobs:
             pyparsing: '==2.4'
           - python-version: '3.14'
             pyparsing: '>=3'
+          - python-version: '3.14'
+            pyparsing: '==3.0.9'
 
     name: Test (Python ${{ matrix.python-version }}, pyparsing ${{ matrix.pyparsing }})
 
