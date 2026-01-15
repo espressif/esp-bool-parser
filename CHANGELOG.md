@@ -20,6 +20,14 @@
 </div>
 <hr>
 
+## v0.2.2 (2026-01-15)
+
+### 🐛 Bug Fix
+
+* Treat Pyparsing versions below 3.1 as legacy to ensure compatibility *(Igor Udot – 8a9b18e)*
+
+---
+
 ## v0.2.1 (2026-01-15)
 
 ### 🔧 Code Refactoring
