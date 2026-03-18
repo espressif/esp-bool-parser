@@ -104,8 +104,9 @@ class ChipAttr(Stmt):
 
         from .soc_header import SOC_HEADERS
 
-        if self.attr in SOC_HEADERS[target]:
-            return SOC_HEADERS[target][self.attr]
+        if target:
+            if self.attr in SOC_HEADERS[target]:
+                return SOC_HEADERS[target][self.attr]
 
         return 0  # default return 0 as false
 
