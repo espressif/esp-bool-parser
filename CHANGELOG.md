@@ -20,6 +20,13 @@
 </div>
 <hr>
 
+## v0.2.3 (2026-03-18)
+
+### 🐛 Bug Fixes
+
+- return false when no target is specified, instead of raising KeyError *(Fu Hanxi - 28e953d)*
+
+
 ## v0.2.2 (2026-01-15)
 
 ### 🐛 Bug Fix
