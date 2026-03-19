@@ -73,10 +73,9 @@ jobs:
           python --version
 
           pytest \
-            --cov esp_bool_parser \
-            --cov-report term-missing:skip-covered \
             --junit-xml pytest-${{ matrix.slug }}.xml \
-            | tee pytest-coverage-${{ matrix.slug }}.txt
+            --cov-report=xml:coverage-${{ matrix.slug }}.xml \
+            --cov=esp_bool_parser
 
       - name: Save PR number
         if: github.event_name == 'pull_request'
@@ -89,6 +88,6 @@ jobs:
           name: test-results-${{ matrix.slug }}
           path: |
             pr_number.txt
-            pytest-coverage-${{ matrix.slug }}.txt
+            coverage-${{ matrix.slug }}.txt
             pytest-${{ matrix.slug }}.xml
           retention-days: 1

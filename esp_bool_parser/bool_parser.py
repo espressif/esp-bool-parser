@@ -57,7 +57,6 @@ class ChipAttr(Stmt):
     """Attributes defined in SOC Header Files and other keywords as followed:
 
     - IDF_TARGET: target
-    - INCLUDE_DEFAULT: take the default build targets into account or not
     - IDF_VERSION_MAJOR: major version of ESP-IDF
     - IDF_VERSION_MINOR: minor version of ESP-IDF
     - IDF_VERSION_PATCH: patch version of ESP-IDF
