@@ -16,45 +16,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download test reports
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v14
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          path: artifacts
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          run_id: ${{ github.event.workflow_run.id }}
+          name_is_regexp: true
+          name: "test-results-.*"
+          path: test-results
+          if_no_artifact_found: ignore
 
       - name: Read PR number
+        id: pr-number
         run: |
-          # The PR number is duplicated across artifacts, we just need one
-          PR_NUMBER_FILE=$(find artifacts -name "pr_number.txt" | head -n 1)
-          if [ -n "$PR_NUMBER_FILE" ] && [ -f "$PR_NUMBER_FILE" ]; then
-            echo "PR_NUMBER=$(cat $PR_NUMBER_FILE)" >> $GITHUB_ENV
+          PR_FILE=$(find test-results -name pr_number.txt | head -n 1)
+          if [ -n "$PR_FILE" ] && [ -f "$PR_FILE" ]; then
+            echo "PR_NUMBER=$(cat $PR_FILE)" >> $GITHUB_ENV
           else
-            echo "pr_number.txt not found, skipping comment."
+            echo "No pr_number.txt found, skipping comment."
             exit 0
           fi
 
       - name: Generate multiple-files string
-        id: generate-files-string
+        id: generate-files
         run: |
           MULTIPLE_FILES=""
-          for path in artifacts/test-results-*/pytest-coverage-*.txt; do
-            dir=$(dirname "$path")
-            slug=$(basename "$dir" | sed 's/^test-results-//')
-            cov_file="$path"
-            xml_file="$dir/pytest-$slug.xml"
-            if [ -f "$cov_file" ] && [ -f "$xml_file" ]; then
-              MULTIPLE_FILES="${MULTIPLE_FILES}${slug}, ${cov_file}, ${xml_file}"$'\n'
-            fi
+          for xml_file in $(find test-results -name "pytest-*.xml"); do
+            dir_name=$(dirname "$xml_file")
+            title=$(basename "$dir_name" | sed 's/^test-results-//')
+            # Capitalize first letter and replace hyphens with spaces
+            title=$(echo "$title" | awk '{print toupper(substr($0,1,1)) substr($0,2)}' | tr '-' ' ')
+
+            cov_file=$(find "$dir_name" -name "coverage-*.xml" | head -n 1)
+            # Add to multiple files string
+            MULTIPLE_FILES="${MULTIPLE_FILES}${title}, ${cov_file}, ${xml_file}"$'\n'
           done
 
-          # Use GitHub environment file for multiline string
-          echo "MULTIPLE_FILES<<EOF" >> $GITHUB_ENV
-          echo "$MULTIPLE_FILES" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "FILES<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$MULTIPLE_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         # We only want to comment if there was a PR number retrieved
-        if: env.PR_NUMBER != '' && env.MULTIPLE_FILES != ''
+        if: env.PR_NUMBER != '' && steps.generate-files.outputs.FILES != ''
         uses: MishaKav/pytest-coverage-comment@v1
         with:
           issue-number: ${{ env.PR_NUMBER }}
-          multiple-files: ${{ env.MULTIPLE_FILES }}
+          multiple-files: ${{ steps.generate-files.outputs.FILES }}
