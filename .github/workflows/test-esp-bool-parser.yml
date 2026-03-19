@@ -78,7 +78,7 @@ jobs:
             --cov=esp_bool_parser
 
       - name: Save PR number
-        if: github.event_name == 'pull_request'
+        if: github.event.number
         run: echo ${{ github.event.number }} > pr_number.txt
 
       - name: Upload test results
@@ -88,6 +88,6 @@ jobs:
           name: test-results-${{ matrix.slug }}
           path: |
             pr_number.txt
-            coverage-${{ matrix.slug }}.txt
+            coverage-${{ matrix.slug }}.xml
             pytest-${{ matrix.slug }}.xml
           retention-days: 1
