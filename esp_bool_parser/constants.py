@@ -22,14 +22,15 @@ IDF_PATH = os.path.abspath(_idf_env)
 
 _idf_py_actions = os.path.join(IDF_PATH, 'tools', 'idf_py_actions')
 sys.path.append(_idf_py_actions)
+
 try:
     _idf_py_constant_py = importlib.import_module('constants')
-except ModuleNotFoundError:
-    LOGGER.debug(
-        'Setting supported/preview targets to empty list... (ESP-IDF constants.py module not found under %s)',
-        _idf_py_actions,
-    )
-    _idf_py_constant_py = object()  # type: ignore
+except ModuleNotFoundError as e:
+    raise ImportError(
+        f'Cannot find ESP-IDF constants.py module under {_idf_py_actions}. '
+        'Please check if IDF_PATH is set correctly and points to a valid ESP-IDF directory.'
+    ) from e
+
 SUPPORTED_TARGETS = getattr(_idf_py_constant_py, 'SUPPORTED_TARGETS', [])
 PREVIEW_TARGETS = getattr(_idf_py_constant_py, 'PREVIEW_TARGETS', [])
 ALL_TARGETS = SUPPORTED_TARGETS + PREVIEW_TARGETS
