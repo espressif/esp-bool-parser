@@ -23,7 +23,7 @@ Parses a boolean expression.
   ```python
   stmt_string = 'IDF_TARGET == "esp32"'
   stmt = parse_bool_expr(stmt_string)
-  result = stmt.get_value("esp32", "config_name")
+  result = stmt.get_value('esp32', 'config_name')
   ```
 
 #### `register_addition_attribute(attr: str, action: t.Callable[..., t.Any]) -> None`
@@ -44,8 +44,9 @@ Additionally, you can override existing attributes, as the newly registered hand
   ```python
   def my_action(target, config_name, **kwargs):
       # Custom logic to handle the attribute
-      print(f"Processing {target} with {config_name}")
+      print(f'Processing {target} with {config_name}')
       return target
 
-  register_addition_attribute("CUSTOM_ATTR", my_action)
+
+  register_addition_attribute('CUSTOM_ATTR', my_action)
   ```
